@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
+import OrderDetailPage from './pages/OrderDetailPage.jsx';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrderHistoryPage />} />
+          <Route path="/orders/:id" element={<OrderDetailPage />} />
         </Routes>
       </main>
       <Footer />
