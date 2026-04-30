@@ -1,3 +1,6 @@
-// Example — do this for all pages you haven't built yet
-const HomePage = () => <div className="p-8 text-white">Home Page</div>;
-export default HomePage;
+// Add import
+import OrderDetailPage from './pages/OrderDetailPage.jsx';
+
+// Add route inside <Routes>
+<Route path="/orders/:id" element={<OrderDetailPage />} />
+
