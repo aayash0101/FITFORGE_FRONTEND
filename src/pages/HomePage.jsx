@@ -21,7 +21,7 @@ const PERKS = [
   { icon: <FiZap size={22} />, title: 'Fast Dispatch', desc: 'Same day for Kathmandu' },
 ];
 
-// ─── Component ─────────────────────────────────────────────────
+
 const HomePage = () => {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ const HomePage = () => {
           </h1>
 
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Premium gym supplements, equipment, and apparel — delivered across Nepal.
+            Premium gym supplements, equipment, and apparel - delivered across Nepal.
             Train harder. Recover faster. Look better.
           </p>
 
