@@ -1,6 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar.jsx';
 import Footer from './components/layout/Footer.jsx';
+import AdminLayout from './components/layout/AdminLayout.jsx';
+import AdminRoute from './components/layout/AdminRoute.jsx';
+
+// Public pages
 import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
@@ -12,26 +16,56 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import OrderHistoryPage from './pages/OrderHistoryPage.jsx';
 import OrderDetailPage from './pages/OrderDetailPage.jsx';
 
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import AdminProducts from './pages/admin/AdminProducts.jsx';
+import AdminOrders from './pages/admin/AdminOrders.jsx';
+import AdminUsers from './pages/admin/AdminUsers.jsx';
+
 const App = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
-      <Navbar />
-      <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/products/:id" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/orders" element={<OrderHistoryPage />} />
-          <Route path="/orders/:id" element={<OrderDetailPage />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+
+      {/* ── Admin Routes (no Navbar/Footer) ── */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="users" element={<AdminUsers />} />
+      </Route>
+
+      {/* ── Public Routes (with Navbar/Footer) ── */}
+      <Route
+        path="/*"
+        element={
+          <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route path="/products/:id" element={<ProductDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/orders" element={<OrderHistoryPage />} />
+                <Route path="/orders/:id" element={<OrderDetailPage />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        }
+      />
+    </Routes>
   );
 };
 
