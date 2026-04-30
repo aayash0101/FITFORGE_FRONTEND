@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import api from '../api/axios.js';
 import { useAuth } from './AuthContext.jsx';
 
@@ -9,13 +9,8 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [cartLoading, setCartLoading] = useState(false);
 
-  // Fetch cart whenever user logs in
-  useEffect(() => {
-    if (user) fetchCart();
-    else setCart(null);
-  }, [user]);
-
-  const fetchCart = async () => {
+  // useCallback so fetchCart reference stays stable — doesn't trigger re-renders
+  const fetchCart = useCallback(async () => {
     try {
       setCartLoading(true);
       const { data } = await api.get('/cart');
@@ -25,29 +20,38 @@ export const CartProvider = ({ children }) => {
     } finally {
       setCartLoading(false);
     }
-  };
+  }, []); // no dependencies — function never changes
 
-  const addToCart = async (productId, quantity = 1) => {
+  useEffect(() => {
+    if (user?._id) {
+      fetchCart();
+    } else {
+      setCart(null);
+    }
+  }, [user?._id, fetchCart]); 
+  // ↑ depend on user._id (primitive) NOT user (object)
+  // Object reference changes every render — primitive doesn't
+
+  const addToCart = useCallback(async (productId, quantity = 1) => {
     const { data } = await api.post('/cart', { productId, quantity });
     setCart(data.cart);
-  };
+  }, []);
 
-  const updateItem = async (productId, quantity) => {
+  const updateItem = useCallback(async (productId, quantity) => {
     const { data } = await api.put(`/cart/${productId}`, { quantity });
     setCart(data.cart);
-  };
+  }, []);
 
-  const removeItem = async (productId) => {
+  const removeItem = useCallback(async (productId) => {
     const { data } = await api.delete(`/cart/${productId}`);
     setCart(data.cart);
-  };
+  }, []);
 
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     const { data } = await api.delete('/cart');
     setCart(data.cart);
-  };
+  }, []);
 
-  // Total item count for navbar badge
   const cartCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
