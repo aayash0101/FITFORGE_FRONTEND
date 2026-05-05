@@ -5,7 +5,6 @@ import api from '../api/axios.js';
 import ProductCard from '../components/product/ProductCard.jsx';
 import Loader from '../components/ui/Loader.jsx';
 
-// ─── Data ──────────────────────────────────────────────────────
 const CATEGORIES = [
   { label: 'Protein', value: 'protein', emoji: '💪' },
   { label: 'Creatine', value: 'creatine', emoji: '⚡' },

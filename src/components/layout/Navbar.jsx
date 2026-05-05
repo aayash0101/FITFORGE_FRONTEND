@@ -36,7 +36,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between h-16">
 
                     {/* Add this ABOVE the hr divider in the dropdown */}
-                    {user.role === 'admin' && (
+                    {user?.role === 'admin' && (
                         <Link
                             to="/admin"
                             onClick={() => setDropdownOpen(false)}
