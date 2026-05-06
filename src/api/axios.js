@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
 });
-
 // Only redirect to login if it's NOT the /auth/me check
 api.interceptors.response.use(
   (response) => response,
