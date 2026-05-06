@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../api/axios.js';
 import { useAuth } from './AuthContext.jsx';
 
@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [cartLoading, setCartLoading] = useState(false);
 
-  // useCallback so fetchCart reference stays stable — doesn't trigger re-renders
   const fetchCart = useCallback(async () => {
     try {
       setCartLoading(true);
@@ -20,7 +19,7 @@ export const CartProvider = ({ children }) => {
     } finally {
       setCartLoading(false);
     }
-  }, []); // no dependencies — function never changes
+  }, []);
 
   useEffect(() => {
     if (user?._id) {
@@ -28,9 +27,7 @@ export const CartProvider = ({ children }) => {
     } else {
       setCart(null);
     }
-  }, [user?._id, fetchCart]); 
-  // ↑ depend on user._id (primitive) NOT user (object)
-  // Object reference changes every render — primitive doesn't
+  }, [user?._id, fetchCart]);
 
   const addToCart = useCallback(async (productId, quantity = 1) => {
     const { data } = await api.post('/cart', { productId, quantity });
@@ -54,10 +51,13 @@ export const CartProvider = ({ children }) => {
 
   const cartCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
+  const value = useMemo(
+    () => ({ cart, cartLoading, cartCount, fetchCart, addToCart, updateItem, removeItem, clearCart }),
+    [cart, cartLoading, cartCount, fetchCart, addToCart, updateItem, removeItem, clearCart]
+  );
+
   return (
-    <CartContext.Provider
-      value={{ cart, cartLoading, cartCount, fetchCart, addToCart, updateItem, removeItem, clearCart }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
