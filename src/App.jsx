@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';  // add Outlet
 import Navbar from './components/layout/Navbar.jsx';
 import Footer from './components/layout/Footer.jsx';
 import AdminLayout from './components/layout/AdminLayout.jsx';
@@ -22,11 +22,13 @@ import AdminProducts from './pages/admin/AdminProducts.jsx';
 import AdminOrders from './pages/admin/AdminOrders.jsx';
 import AdminUsers from './pages/admin/AdminUsers.jsx';
 
-// Layout wrapper for public routes
-const PublicLayout = ({ children }) => (
+// ✅ Outlet instead of children
+const PublicLayout = () => (
   <div className="min-h-screen flex flex-col bg-gray-950 text-gray-100">
     <Navbar />
-    <main className="flex-1">{children}</main>
+    <main className="flex-1">
+      <Outlet />
+    </main>
     <Footer />
   </div>
 );
@@ -34,7 +36,6 @@ const PublicLayout = ({ children }) => (
 const App = () => {
   return (
     <Routes>
-      {/* ── Admin Routes (no Navbar/Footer) ── */}
       <Route
         path="/admin"
         element={
@@ -49,8 +50,7 @@ const App = () => {
         <Route path="users" element={<AdminUsers />} />
       </Route>
 
-      {/* ── Public Routes (with Navbar/Footer) ── */}
-      <Route element={<PublicLayout />}>  {/* ← layout route, no path */}
+      <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/:id" element={<ProductDetailPage />} />
