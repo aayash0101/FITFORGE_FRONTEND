@@ -8,12 +8,16 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const status = error.response?.status;
     const url = error.config?.url || '';
+
+    console.log('🔴 Interceptor hit:', { status, url }); // temp debug
+
     const isAuthRoute = url.includes('/auth/');
-    const is401 = error.response?.status === 401;
     const isOnLoginPage = window.location.pathname === '/login';
 
-    if (is401 && !isAuthRoute && !isOnLoginPage) {
+    if (status === 401 && !isAuthRoute && !isOnLoginPage) {
+      console.log('🔴 Redirecting to login from:', url);
       window.location.href = '/login';
     }
 
