@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../api/axios.js';
 
 const AuthContext = createContext(null);
@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     let cancelled = false;
-
     const fetchUser = async () => {
       try {
         const { data } = await api.get('/auth/me');
@@ -20,12 +19,9 @@ export const AuthProvider = ({ children }) => {
         if (!cancelled) setLoading(false);
       }
     };
-
     fetchUser();
-
-    // Cleanup — if component unmounts before fetch completes, ignore result
     return () => { cancelled = true; };
-  }, []); // ← empty array: runs ONCE on mount only
+  }, []);
 
   const login = useCallback(async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
@@ -44,8 +40,13 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }, []);
 
+  const value = useMemo(
+    () => ({ user, setUser, loading, login, register, logout }),
+    [user, loading, login, register, logout]
+  );
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, login, register, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
