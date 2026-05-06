@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext.jsx';
 const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [cart, setCart] = useState(null);
   const [cartLoading, setCartLoading] = useState(false);
 
@@ -22,12 +22,13 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return; // wait for auth to resolve first
     if (user?._id) {
       fetchCart();
     } else {
       setCart(null);
     }
-  }, [user?._id, fetchCart]);
+  }, [user?._id, authLoading, fetchCart]);
 
   const addToCart = useCallback(async (productId, quantity = 1) => {
     const { data } = await api.post('/cart', { productId, quantity });

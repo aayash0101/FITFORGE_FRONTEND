@@ -11,13 +11,11 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const url = error.config?.url || '';
 
-    console.log('🔴 Interceptor hit:', { status, url }); // temp debug
-
     const isAuthRoute = url.includes('/auth/');
+    const isCartRoute = url.includes('/cart');
     const isOnLoginPage = window.location.pathname === '/login';
 
-    if (status === 401 && !isAuthRoute && !isOnLoginPage) {
-      console.log('🔴 Redirecting to login from:', url);
+    if (status === 401 && !isAuthRoute && !isCartRoute && !isOnLoginPage) {
       window.location.href = '/login';
     }
 
