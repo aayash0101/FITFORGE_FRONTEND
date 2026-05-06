@@ -25,6 +25,12 @@ const HomePage = () => {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // TEMP DIAGNOSTIC
+  useEffect(() => {
+    console.log('🏠 HomePage MOUNTED');
+    return () => console.log('🏠 HomePage UNMOUNTED');
+  }, []);
+
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
